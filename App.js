@@ -2,18 +2,17 @@
 import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState } from 'react';
+/* import { DocumentDirectoryPath, writeFile } from 'react-native-fs'; */
+/* import { writeFile } from 'react-native-fs';
+ */
 
 import JSonNotes from './saved-notes.json'
 
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-web';
 
 
 function HomePage({ navigation }) {
-
- 
-
-
   return (
     <View style={styles.container}>
 
@@ -41,12 +40,7 @@ function HomePage({ navigation }) {
         />
       </View>
 
-    <Text style={styles.text}>This is the home page</Text>
-    
-    
-
-
-    
+    <Text style={styles.textColorStyle}>This is the home page</Text>
 </View>
   );
 }
@@ -55,6 +49,7 @@ function AboutPage() {
   return (
     <View>
       <Text>This is the AboutMe section</Text>
+      <Text>Some about me text</Text>
     </View>
   )
 }
@@ -67,16 +62,42 @@ function ReadMore() {
   )
 }
 
+
+
 function Notes() {
-
-
   const [text, setText] = useState('')
 
-  function buttonHandler(){
-    alert('you pressed a button ' + text)
-  }
+  /* const path = DocumentDirectoryPath + '/saved-notes.json' */
 
-  notesToMap = JSonNotes.notes
+  /*const fs = require('fs')*/
+
+
+  let notesToMap = JSonNotes.notes
+  let notesArrayLen = notesToMap.length
+
+  let newNoteId = notesToMap[notesArrayLen-1].id+1
+
+  function buttonHandler(){
+    
+    notesToMap.push({'id': newNoteId, 'post': '' + text})    
+    
+    console.log(notesToMap)
+
+    notesStringified = JSON.stringify(notesToMap)
+
+   /*try {
+      writeFile(path, notesStringified, 'utf8')
+      Alert.alert('file saved', null, [{ text: 'ok'}])
+    } catch (e) {
+      console.log('error', e);
+    }
+    */
+ 
+    
+    }
+
+
+
   
   const listOfNotes = notesToMap.map(note =>
     <View key={note.id}>
@@ -86,7 +107,7 @@ function Notes() {
 
   return (
     <View>
-      <Button title='Press Me' onPress={buttonHandler}></Button>
+      <Button style={styles.textBoxStyle} title='Press Me' onPress={buttonHandler}></Button>
       <TextInput onChangeText={(txt) => setText(txt)}/>
 
       <Text>This is the Notes section</Text>
@@ -94,6 +115,9 @@ function Notes() {
     </View>
   )
 }
+
+
+
 
 
 const Stack = createNativeStackNavigator();
@@ -131,6 +155,13 @@ const styles = StyleSheet.create({
   },
   buttonView: {
     marginTop: "10px"
+  },
+  textBoxStyle: {
+    width: '50%',
+    margin: 'auto'
+  },
+  textColorStyle: {
+    color: 'red'
   }
 });
 
