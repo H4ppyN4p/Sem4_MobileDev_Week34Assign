@@ -2,6 +2,8 @@
 import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState } from 'react';
+
+import * as FileSystem from 'expo-file-system'
 /* import { DocumentDirectoryPath, writeFile } from 'react-native-fs'; */
 /* import { writeFile } from 'react-native-fs';
  */
@@ -64,7 +66,9 @@ function ReadMore() {
 
 
 
+
 function Notes() {
+ 
   const [text, setText] = useState('')
 
   /* const path = DocumentDirectoryPath + '/saved-notes.json' */
@@ -77,24 +81,20 @@ function Notes() {
 
   let newNoteId = notesToMap[notesArrayLen-1].id+1
 
-  function buttonHandler(){
+
+  /* function buttonHandler(){
     
     notesToMap.push({'id': newNoteId, 'post': '' + text})    
     
     console.log(notesToMap)
 
+    notesToMap = notesToMap
+
     notesStringified = JSON.stringify(notesToMap)
 
-   /*try {
-      writeFile(path, notesStringified, 'utf8')
-      Alert.alert('file saved', null, [{ text: 'ok'}])
-    } catch (e) {
-      console.log('error', e);
-    }
-    */
- 
-    
-    }
+    newNoteId++
+   
+   } */
 
 
 
@@ -107,12 +107,11 @@ function Notes() {
 
   return (
     <View>
-      <Button style={styles.textBoxStyle} title='Press Me' onPress={buttonHandler}></Button>
-      <TextInput onChangeText={(txt) => setText(txt)}/>
+      <Button style={styles.textBoxStyle} title='Press Me' ></Button>
 
       <Text>This is the Notes section</Text>
       {listOfNotes}
-    </View>
+  </View>
   )
 }
 
