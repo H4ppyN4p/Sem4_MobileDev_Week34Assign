@@ -1,17 +1,16 @@
 
 import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import * as FileSystem from 'expo-file-system'
 /* import { DocumentDirectoryPath, writeFile } from 'react-native-fs'; */
 /* import { writeFile } from 'react-native-fs';
  */
 
-import JSonNotes from './saved-notes.json'
+import JSonNotes from './jsonData/saved-notes.json'
 
-import { Alert, Button, StyleSheet, Text, View } from 'react-native';
-import { TextInput } from 'react-native-web';
+import { Alert, Button, StyleSheet, Text, View, TextInput  } from 'react-native';
 
 
 function HomePage({ navigation }) {
@@ -42,7 +41,7 @@ function HomePage({ navigation }) {
         />
       </View>
 
-    <Text style={styles.textColorStyle}>This is the home page</Text>
+    <Text style={styles.textColorStyle}>This is the home pageeee</Text>
 </View>
   );
 }
@@ -64,23 +63,8 @@ function ReadMore() {
   )
 }
 
-
-
-
 function Notes() {
  
-  const [text, setText] = useState('')
-
-  /* const path = DocumentDirectoryPath + '/saved-notes.json' */
-
-  /*const fs = require('fs')*/
-
-
-  let notesToMap = JSonNotes.notes
-  let notesArrayLen = notesToMap.length
-
-  let newNoteId = notesToMap[notesArrayLen-1].id+1
-
 
   /* function buttonHandler(){
     
@@ -97,6 +81,19 @@ function Notes() {
    } */
 
 
+   const [text, setText] = useState('')
+
+
+   let notesToMap = JSonNotes.notes
+   let notesArrayLen = notesToMap.length
+ 
+   let newNoteId = notesToMap[notesArrayLen-1].id+1
+
+   async function handelButtonPress(){
+
+   
+
+   }
 
   
   const listOfNotes = notesToMap.map(note =>
@@ -106,23 +103,93 @@ function Notes() {
   )
 
   return (
-    <View>
-      <Button style={styles.textBoxStyle} title='Press Me' ></Button>
+      <View>
+        <Button style={styles.textBoxStyle} title='Press Me' 
+        onPress={handelButtonPress}></Button>
 
-      <Text>This is the Notes section</Text>
-      {listOfNotes}
-  </View>
+        <Text>Add a  new note:</Text>
+        <TextInput 
+          value={text}
+          onChangeText={(text) => setText(text)}
+          placeholder={'Some text'}
+        />
+        <Text>This is the Notes section</Text>
+        <Text></Text>
+        {listOfNotes}
+    </View>
   )
 }
-
-
 
 
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+
+
+  /*
+  */
+  useEffect(() => {
+
+    const jsonFilePath = `${FileSystem.documentDirectory}myData.json`;
+
+
+    /*
+    */
+    async function createEmptyJasonFile() {
+
+      fileExist = checkForFile(jsonFilePath);
+
+      if (fileExist == false) {
+        try {
+          // Create an empty JSON object.
+          const emptyJson = {};
+
+          //convert the JSON object to a string
+          const jsonContent = JSON.stringify(emptyJson);
+      
+          // Write the empty string to the file.
+          await FileSystem.writeAsStringAsync(jsonFilePath, jsonContent);
+      
+          console.log('Empty text filee created:', jsonFilePath);
+
+        } catch (error) {
+          console.error('Error creating text file:', error);
+        }
+
+      }
+      
+    }
+    
+    /*
+    */
+
+    async function checkForFile(filePath) {
+      const fileInfo = await FileSystem.getInfoAsync(filePath);
+
+      if (fileInfo.exists) {
+        console.log(`File exists at path: ${filePath}`);
+        return true
+      } 
+      else {
+        console.log('File does not exist at path for :' + fileInfo);
+          // Call the function to create the empty text file.
+          createEmptyJasonFile()  
+      }
+
+    }
+
+    /*
+    */
+    
+  
+
+    console.log('App started')
+  }, [])
+
   return (
+   
+
     <NavigationContainer>
       <Stack.Navigator>
 
@@ -164,20 +231,3 @@ const styles = StyleSheet.create({
   }
 });
 
-
-/*
-
-const notes = Notes
-console.log(notes.notes)
-
-const listOfNotes = notes.map(note =>
-  
-  <View key={note.id}>
-    <View>{note.post}</View>
-  </View>
-  )
-
-
-  {listOfNotes}
-
-  */
